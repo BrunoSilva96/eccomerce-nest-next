@@ -1,6 +1,8 @@
-import { Controller, Post, Body } from '@nestjs/common';
-import { CreateUserDto } from '../dtos/create-user.dto';
+import { Controller, Post, Body, UseGuards, Get } from '@nestjs/common';
+import { CurrentUser } from 'src/modules/auth/decorators/current-user.decorator';
+import { CreateUserDto } from '../dto/create-user.dto';
 import { CreateUserUseCase } from '../use-cases/create-user.usecase';
+import { JwtAuthGuard } from 'src/modules/auth/guards/jwt-auth.guard';
 
 @Controller('users')
 export class UserController {
@@ -16,5 +18,11 @@ export class UserController {
       email: user.email,
       createdAt: user.createdAt,
     };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  getMe(@CurrentUser() user: { userId: string; email: string }) {
+    return user;
   }
 }

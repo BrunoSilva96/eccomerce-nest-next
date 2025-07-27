@@ -15,6 +15,7 @@ paths:
         content:
           application/json:
             schema:
+              $ref: '#/components/schemas/CreateUserDto'
               type: object
               properties:
                 name:
@@ -32,3 +33,59 @@ paths:
           description: Usuário criado com sucesso
         '409':
           description: Email já está em uso
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Realiza login e retorna um token JWT
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUserDto'
+      responses:
+        '201':
+          description: Login bem-sucedido
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accessToken:
+                    type: string
+                    example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...'
+        '401':
+          description: Credenciais inválidas
+
+components:
+  schemas:
+    CreateUserDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Bruno Silva
+        email:
+          type: string
+          example: bruno@example.com
+        password:
+          type: string
+          format: password
+          example: 123456
+      required:
+        - name
+        - email
+        - password
+    LoginUserDto:
+      type: object
+      properties:
+        email:
+          type: string
+          example: user@example.com
+        password:
+          type: string
+          example: 123456
+      required:
+        - email
+        - password
