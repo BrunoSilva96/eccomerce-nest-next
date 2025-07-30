@@ -7,6 +7,16 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class DrizzleUserRepository implements UserRepository {
+  async update(userId: string, data: Partial<UserEntity>): Promise<UserEntity> {
+    const [user] = await db
+      .update(users)
+      .set(data)
+      .where(eq(users.id, userId))
+      .returning();
+
+    return user;
+  }
+
   async create(data: {
     name: string;
     email: string;
@@ -21,6 +31,7 @@ export class DrizzleUserRepository implements UserRepository {
       id: user.id,
       name: user.name,
       email: user.email,
+      password: user.password,
       createdAt: user.createdAt ?? new Date(),
     });
   }
@@ -34,6 +45,7 @@ export class DrizzleUserRepository implements UserRepository {
       id: user.id,
       name: user.name,
       email: user.email,
+      password: user.password,
       createdAt: user.createdAt ?? new Date(),
     });
   }

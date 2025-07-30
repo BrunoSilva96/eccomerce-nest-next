@@ -8,5 +8,10 @@ export abstract class UserRepository {
     createdAt: Date;
   }): Promise<UserEntity>;
 
+  abstract update(
+    userId: string,
+    data: Partial<UserEntity>,
+  ): Promise<UserEntity>;
+
   abstract findByEmail(email: string): Promise<UserEntity | null>;
 }
