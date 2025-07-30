@@ -16,7 +16,6 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/CreateUserDto'
-              type: object
               properties:
                 name:
                   type: string
@@ -33,6 +32,56 @@ paths:
           description: Usuário criado com sucesso
         '409':
           description: Email já está em uso
+
+  /users/me:
+    patch:
+      summary: Atualiza dados do usuário autenticado
+      security:
+        - bearerAuth: []
+      tags:
+        - Usuários
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  example: "João da Silva"
+                email:
+                  type: string
+                  example: "joao@example.com"
+                password:
+                  type: string
+                  example: "NovaSenha@123"
+      responses:
+        '200':
+          description: Usuário atualizado com sucesso
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+        '409':
+          description: Email já está em uso
+        '401':
+          description: Não autorizado – token inválido ou ausente
+
+
   /auth/login:
     post:
       tags:
@@ -45,7 +94,7 @@ paths:
             schema:
               $ref: '#/components/schemas/LoginUserDto'
       responses:
-        '201':
+        '200':
           description: Login bem-sucedido
           content:
             application/json:
@@ -59,6 +108,11 @@ paths:
           description: Credenciais inválidas
 
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     CreateUserDto:
       type: object
@@ -72,7 +126,7 @@ components:
         password:
           type: string
           format: password
-          example: 123456
+          example: '@Pass.10'
       required:
         - name
         - email
@@ -85,7 +139,7 @@ components:
           example: user@example.com
         password:
           type: string
-          example: 123456
+          example: '@Pass.10'
       required:
         - email
         - password

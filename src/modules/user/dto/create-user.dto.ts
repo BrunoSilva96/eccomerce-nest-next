@@ -4,6 +4,7 @@ import {
   MinLength,
   type ValidationOptions,
 } from 'class-validator';
+import { IsStrongPassword } from 'src/shared/validators/is-strong-password';
 
 const nameRequired: ValidationOptions = { message: 'Name is required' };
 const emailInvalid: ValidationOptions = { message: 'Invalid email format' };
@@ -19,5 +20,9 @@ export class CreateUserDto {
   email: string;
 
   @MinLength(6, passwordMin)
+  @IsStrongPassword({
+    message:
+      'Password must contain at least one uppercase letter, one number, and one special character',
+  })
   password: string;
 }

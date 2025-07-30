@@ -29,11 +29,8 @@ export class CreateUserUseCase {
       createdAt: new Date(),
     });
 
-    return new UserEntity({
-      id: user.id,
-      name: user.name,
-      email: user.email,
-      createdAt: user.createdAt ?? new Date(),
-    });
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password, ...useWithoutPassword } = user;
+    return new UserEntity(useWithoutPassword);
   }
 }

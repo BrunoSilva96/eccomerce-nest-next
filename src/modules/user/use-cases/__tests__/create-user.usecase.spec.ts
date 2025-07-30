@@ -12,8 +12,12 @@ describe('CreateUserCase', () => {
       create: jest.fn().mockImplementation((data) => {
         return new UserEntity({
           id: 'uuid',
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
           name: data.name,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
           email: data.email,
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
+          password: data.password,
           createdAt: new Date(),
         });
       }),
@@ -26,10 +30,14 @@ describe('CreateUserCase', () => {
     const result: UserEntity = await useCase.execute({
       name: 'Test',
       email: 'test@email.com',
-      password: '123456',
+      password: '@Teste.10',
     });
 
-    expect(mockUserRepository.findByEmail).toHaveBeenCalledWith('test@email.com');
+    // eslint-disable-next-line @typescript-eslint/unbound-method
+    expect(mockUserRepository.findByEmail).toHaveBeenCalledWith(
+      'test@email.com',
+    );
+    // eslint-disable-next-line @typescript-eslint/unbound-method
     expect(mockUserRepository.create).toHaveBeenCalled();
     expect(result).toHaveProperty('id', 'uuid');
     expect(result).toBeInstanceOf(UserEntity);
@@ -41,6 +49,7 @@ describe('CreateUserCase', () => {
         id: 'uuid',
         name: 'teste',
         email: 'teste@email.com',
+        password: '@Teste.10',
         createdAt: new Date(),
       }),
     );
@@ -49,7 +58,7 @@ describe('CreateUserCase', () => {
       useCase.execute({
         name: 'teste',
         email: 'teste@email.com',
-        password: '123456',
+        password: '@Teste.10',
       }),
     ).rejects.toThrow('Email already in use');
   });

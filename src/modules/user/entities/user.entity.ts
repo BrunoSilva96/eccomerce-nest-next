@@ -2,7 +2,9 @@ export class UserEntity {
   id: string;
   name: string;
   email: string;
-  createdAt: Date;
+  password?: string;
+  createdAt: Date | null;
+  updatedAt?: Date;
 
   constructor(props: UserEntity) {
     Object.assign(this, props);

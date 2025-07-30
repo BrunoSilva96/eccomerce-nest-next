@@ -15,9 +15,11 @@ export class DrizzleAuthRepository implements AuthRepository {
 
     if (!user) return null;
 
-    const passwordMatch = BcryptHelper.comparePassword(password, user.password);
+    const passwordMatch = await BcryptHelper.comparePassword(
+      password,
+      user.password,
+    );
 
-    // eslint-disable-next-line @typescript-eslint/no-misused-promises
     if (!passwordMatch) return null;
 
     return { id: user.id };
