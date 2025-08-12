@@ -4,8 +4,10 @@ import { DrizzleUserRepository } from './repositories/implementations/drizzle-us
 import { UserRepository } from './repositories/user.repository';
 import { UserController } from './controllers/user.controller';
 import { UpdateUserUseCase } from './use-cases/update-user.usecase';
+import { MailModule } from '../mail/mail.module';
 
 @Module({
+  imports: [MailModule],
   controllers: [UserController],
   providers: [
     CreateUserUseCase,
