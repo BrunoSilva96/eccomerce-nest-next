@@ -1,29 +1,42 @@
 import { CreateUserUseCase } from '../create-user.usecase';
 import { UserRepository } from '../../repositories/user.repository';
 import { UserEntity } from '../../entities/user.entity';
+import { MailService } from 'src/modules/mail/services/mail.service';
+import { BcryptHelper } from '../../../../shared/crypto/bcrypt.helper';
+import * as jwt from 'jsonwebtoken';
 
 describe('CreateUserCase', () => {
   let useCase: CreateUserUseCase;
   let mockUserRepository: jest.Mocked<UserRepository>;
+  let mockMail: jest.Mocked<MailService>;
 
   beforeEach(() => {
     mockUserRepository = {
       findByEmail: jest.fn().mockResolvedValue(null),
-      create: jest.fn().mockImplementation((data) => {
-        return new UserEntity({
-          id: 'uuid',
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-          name: data.name,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-          email: data.email,
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
-          password: data.password,
-          createdAt: new Date(),
-        });
+      create: jest.fn().mockResolvedValue({
+        id: 'uuid',
+        name: 'Test',
+        email: 'test@email.com',
+        password: 'hashed',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+        emailVerifiedAt: null,
       }),
+      update: jest.fn(),
+      findById: jest.fn(),
+      markEmailVerified: jest.fn(),
     } as unknown as jest.Mocked<UserRepository>;
 
-    useCase = new CreateUserUseCase(mockUserRepository);
+    mockMail = {
+      sendMail: jest.fn().mockResolvedValue(undefined),
+    } as unknown as jest.Mocked<MailService>;
+
+    // evita custo/variável externa
+    jest.spyOn(BcryptHelper, 'hashPassword').mockResolvedValue('hashed');
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    jest.spyOn(jwt, 'sign').mockReturnValue('fake.jwt.token' as any);
+
+    useCase = new CreateUserUseCase(mockUserRepository, mockMail);
   });
 
   it('should create a user successfully', async () => {
