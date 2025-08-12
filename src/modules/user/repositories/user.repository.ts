@@ -6,6 +6,7 @@ export abstract class UserRepository {
     email: string;
     password: string;
     createdAt: Date;
+    emailVerifiedAt?: Date | null;
   }): Promise<UserEntity>;
 
   abstract update(
@@ -14,4 +15,7 @@ export abstract class UserRepository {
   ): Promise<UserEntity>;
 
   abstract findByEmail(email: string): Promise<UserEntity | null>;
+
+  abstract findById(id: string): Promise<UserEntity | null>;
+  abstract markEmailVerified(id: string): Promise<void>;
 }
