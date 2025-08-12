@@ -33,6 +33,7 @@ export class DrizzleUserRepository implements UserRepository {
       email: user.email,
       password: user.password,
       createdAt: user.createdAt ?? new Date(),
+      emailVerifiedAt: user.emailVerifiedAt ?? null,
     });
   }
 
@@ -47,6 +48,16 @@ export class DrizzleUserRepository implements UserRepository {
       email: user.email,
       password: user.password,
       createdAt: user.createdAt ?? new Date(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      emailVerifiedAt: user.emailVerifiedAt as any,
     });
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  findById(id: string): Promise<UserEntity | null> {
+    throw new Error('Method not implemented.');
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  markEmailVerified(id: string): Promise<void> {
+    throw new Error('Method not implemented.');
   }
 }
